@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>辛口シナストリー astrology 2重円相性鑑定</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Shippori Mincho', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #1e1035 0%, #090514 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(25, 18, 48, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    .glass-input {
+      background: rgba(15, 10, 30, 0.6);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      color: #fff;
+    }
+    .glass-input:focus {
+      border-color: #ec4899;
+      outline: none;
+      box-shadow: 0 0 12px rgba(236, 72, 153, 0.4);
+    }
+    .spicy-badge {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+    }
+    .element-fire { color: #f87171; }
+    .element-earth { color: #4ade80; }
+    .element-air { color: #38bdf8; }
+    .element-water { color: #c084fc; }
+  </style>
+</head>
+<body class="p-3 md:p-6 pb-20">
+
+  <div class="max-w-5xl mx-auto">
+    <!-- Header -->
+    <header class="text-center my-6 md:my-10">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-900/50 border border-purple-500/30 text-purple-300 text-xs md:text-sm font-semibold mb-3">
+        <i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i> 精密スイス天体暦準拠 (SwissEph Calc)
+      </div>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400 mb-2">
+        辛口シナストリー相性診断
+      </h1>
+      <p class="text-xs md:text-sm text-purple-200/70 max-w-xl mx-auto">
+        二人の生年月日時から7天体（太陽・月・水星・金星・火星・木星・土星）の位置と2重円アスペクト、エレメントバランスを算出し、オブラートに包まない「辛口リアルな相性」を暴きます。
+      </p>
+    </header>
+
+    <!-- Input Form Card -->
+    <div class="glass-card rounded-2xl p-5 md:p-8 mb-8 border border-purple-500/30">
+      <form id="synastryForm" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        
+        <!-- Person A -->
+        <div class="space-y-4 bg-purple-950/30 p-4 md:p-6 rounded-xl border border-purple-800/30">
+          <div class="flex items-center gap-2 text-pink-400 font-bold text-lg border-b border-purple-800/50 pb-2">
+            <i class="fa-solid fa-user"></i>
+            <span>お相手A（あなた）</span>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-purple-200 mb-1">お名前 / ニックネーム</label>
+            <input type="text" id="nameA" value="あなた" class="w-full px-3 py-2 rounded-lg glass-input text-sm" required>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-purple-200 mb-1">生年月日</label>
+              <input type="date" id="dobA" value="2011-11-11" class="w-full px-3 py-2 rounded-lg glass-input text-sm" required>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-semibold text-purple-200">出生時間</label>
+                <label class="inline-flex items-center gap-1 text-[11px] text-pink-300 cursor-pointer">
+                  <input type="checkbox" id="unknownTimeA" class="rounded accent-pink-500"> 時間不明(12:00)
+                </label>
+              </div>
+              <input type="time" id="tobA" value="12:00" class="w-full px-3 py-2 rounded-lg glass-input text-sm">
+            </div>
+          </div>
+          <p id="moonNoteA" class="text-[11px] text-pink-300/80 italic hidden">※出生時間不明のため月星座が前後する可能性があります</p>
+        </div>
+
+        <!-- Person B -->
+        <div class="space-y-4 bg-purple-950/30 p-4 md:p-6 rounded-xl border border-purple-800/30">
+          <div class="flex items-center gap-2 text-indigo-400 font-bold text-lg border-b border-purple-800/50 pb-2">
+            <i class="fa-solid fa-user-gear"></i>
+            <span>お相手B（気になる相手）</span>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-purple-200 mb-1">お名前 / ニックネーム</label>
+            <input type="text" id="nameB" value="お相手" class="w-full px-3 py-2 rounded-lg glass-input text-sm" required>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-purple-200 mb-1">生年月日</label>
+              <input type="date" id="dobB" value="1995-08-25" class="w-full px-3 py-2 rounded-lg glass-input text-sm" required>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-semibold text-purple-200">出生時間</label>
+                <label class="inline-flex items-center gap-1 text-[11px] text-indigo-300 cursor-pointer">
+                  <input type="checkbox" id="unknownTimeB" class="rounded accent-indigo-500"> 時間不明(12:00)
+                </label>
+              </div>
+              <input type="time" id="tobB" value="18:30" class="w-full px-3 py-2 rounded-lg glass-input text-sm">
+            </div>
+          </div>
+          <p id="moonNoteB" class="text-[11px] text-indigo-300/80 italic hidden">※出生時間不明のため月星座が前後する可能性があります</p>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="md:col-span-2 text-center mt-2">
+          <button type="submit" class="w-full sm:w-auto px-10 py-3.5 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg hover:shadow-pink-500/25 transition duration-300 flex items-center justify-center gap-3 mx-auto text-base">
+            <i class="fa-solid fa-fire text-yellow-300"></i> 辛口相性を二重円でホロスコープ鑑定する
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Container (Hidden by default) -->
+    <div id="results" class="hidden space-y-8">
+      
+      <!-- Score Banner -->
+      <div class="glass-card rounded-2xl p-6 md:p-8 text-center border-2 border-pink-500/40 relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-pink-600/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="inline-block spicy-badge text-white font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+          辛口判定結果
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-100 mb-4">
+          <span id="resNameA">あなた</span> & <span id="resNameB">お相手</span> のリアル相性点数
+        </h2>
+        
+        <div class="flex items-center justify-center gap-2 my-4">
+          <span id="synastryScore" class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-red-500">0</span>
+          <span class="text-2xl md:text-4xl font-bold text-purple-300">/ 100点</span>
+        </div>
+
+        <p id="spicySummary" class="text-sm md:text-base text-purple-100 max-w-2xl mx-auto leading-relaxed bg-purple-900/40 p-4 rounded-xl border border-purple-500/20 font-medium">
+          <!-- Summary text injected here -->
+        </p>
+      </div>
+
+      <!-- 2-Column Section: Horoscope 2重円 Chart & Elements -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Dual Wheel Horoscope (SVG) -->
+      <div class="lg:col-span-7 glass-card rounded-2xl p-5 flex flex-col items-center justify-center">
+        <div class="flex items-center justify-between w-full mb-3 px-2">
+          <h3 class="font-bold text-lg text-purple-200 flex items-center gap-2">
+            <i class="fa-solid fa-circle-dot text-pink-400"></i> ネイタル2重円 (Synastry Chart)
+          </h3>
+          <div class="text-xs text-purple-300 flex gap-3">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-pink-400"></span> 内円: <span id="legendA">A</span></span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span> 外円: <span id="legendB">B</span></span>
+          </div>
+        </div>
+        
+        <div id="chartContainer" class="w-full aspect-square max-w-[450px] relative flex items-center justify-center">
+          <svg id="horoscopeSvg" viewBox="0 0 500 500" class="w-full h-full drop-shadow-md"></svg>
+        </div>
+        <p class="text-[11px] text-purple-300/60 mt-2 text-center">※内円：<span id="legendA2"></span> / 外円：<span id="legendB2"></span> / 中央線：アスペクト（赤破線:緊張・青線:調和）</p>
+      </div>
+
+      <!-- Individual Breakdown & Elements -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Element Balance Comparison -->
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="font-bold text-base text-purple-200 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie text-yellow-400"></i> 4元素(エレメント)バランス相性
+          </h3>
+          <div class="flex items-center justify-end gap-4 text-xs font-semibold mb-3">
+            <span class="flex items-center gap-1 text-pink-400"><span class="w-3 h-3 rounded bg-pink-500 inline-block"></span> <span id="elemLegendA">A</span></span>
+            <span class="flex items-center gap-1 text-sky-400"><span class="w-3 h-3 rounded bg-sky-500 inline-block"></span> <span id="elemLegendB">B</span></span>
+          </div>
+          <div id="elementalComparison" class="space-y-3.5">
+            <!-- Rendered dynamically -->
+          </div>
+          <div id="elementSpicyComment" class="mt-4 text-xs bg-purple-950/60 p-3 rounded-lg border border-purple-700/30 text-purple-200 leading-relaxed">
+            <!-- Element commentary -->
+          </div>
+        </div>
+
+        <!-- 7 Planets Summary for Both -->
+      <div class="glass-card rounded-2xl p-5">
+        <h3 class="font-bold text-base text-purple-200 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-planet-ringed text-indigo-400"></i> 9天体・感受点 (太陽〜土星・ノード) 配置
+        </h3>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div id="planetsA" class="bg-purple-900/30 p-3 rounded-xl border border-purple-800/40">
+            <div class="font-bold text-pink-300 mb-2 border-b border-purple-700/40 pb-1" id="pNameA">A</div>
+            <div class="space-y-1.5" id="pListA"></div>
+          </div>
+          <div id="planetsB" class="bg-indigo-900/30 p-3 rounded-xl border border-indigo-800/40">
+            <div class="font-bold text-indigo-300 mb-2 border-b border-indigo-700/40 pb-1" id="pNameB">B</div>
+            <div class="space-y-1.5" id="pListB"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+      <!-- Personality & Preferences (お互いの好みや傾向) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Person A Preferences -->
+        <div class="glass-card rounded-2xl p-6 border-t-4 border-pink-500">
+          <h3 class="font-bold text-lg text-pink-300 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-heart"></i> <span id="prefTitleA">A</span>の好きなもの・恋愛＆行動傾向
+          </h3>
+          <div id="prefContentA" class="space-y-3 text-sm text-purple-100"></div>
+        </div>
+
+        <!-- Person B Preferences -->
+        <div class="glass-card rounded-2xl p-6 border-t-4 border-indigo-500">
+          <h3 class="font-bold text-lg text-indigo-300 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-heart"></i> <span id="prefTitleB">B</span>の好きなもの・恋愛＆行動傾向
+          </h3>
+          <div id="prefContentB" class="space-y-3 text-sm text-purple-100"></div>
+        </div>
+      </div>
+
+      <!-- Spicy Synastry Aspects Detail (辛口アスペクト解説) -->
+      <div class="glass-card rounded-2xl p-6 md:p-8">
+        <h3 class="font-bold text-xl text-purple-100 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-pepper-hot text-red-500"></i> 2人の2重円 辛口アスペクト診断
+        </h3>
+        <p class="text-xs text-purple-300 mb-6">天体同士が作る角度（0°, 90°, 180°, 120°, 60°）と、各天体が担うテーマ（会話・恋愛・現実的絆など）から読み解くリアルな相性：</p>
+        
+        <div id="aspectsList" class="space-y-4">
+          <!-- Dynamically populated aspect blocks -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // --- Zodiac & Astrological Constants ---
+    const ZODIAC = [
+      { name: "牡羊座", sign: "Aries", symbol: "♈", elem: "Fire", deg: 0 },
+      { name: "牡牛座", sign: "Taurus", symbol: "♉", elem: "Earth", deg: 30 },
+      { name: "双子座", sign: "Gemini", symbol: "♊", elem: "Air", deg: 60 },
+      { name: "蟹座", sign: "Cancer", symbol: "♋", elem: "Water", deg: 90 },
+      { name: "獅子座", sign: "Leo", symbol: "♌", elem: "Fire", deg: 120 },
+      { name: "乙女座", sign: "Virgo", symbol: "♍", elem: "Earth", deg: 150 },
+      { name: "天秤座", sign: "Libra", symbol: "♎", elem: "Air", deg: 180 },
+      { name: "蠍座", sign: "Scorpio", symbol: "♏", elem: "Water", deg: 210 },
+      { name: "射手座", sign: "Sagittarius", symbol: "♐", elem: "Fire", deg: 240 },
+      { name: "山羊座", sign: "Capricorn", symbol: "♑", elem: "Earth", deg: 270 },
+      { name: "水瓶座", sign: "Aquarius", symbol: "♒", elem: "Air", deg: 300 },
+      { name: "魚座", sign: "Pisces", symbol: "♓", elem: "Water", deg: 330 }
+    ];
+
+    const PLANET_DEFS = [
+      { key: "Sun", name: "太陽", symbol: "☉", color: "#fbbf24" },
+      { key: "Moon", name: "月", symbol: "☽", color: "#f87171" },
+      { key: "Mercury", name: "水星", symbol: "☿", color: "#38bdf8" },
+      { key: "Venus", name: "金星", symbol: "♀", color: "#f472b6" },
+      { key: "Mars", name: "火星", symbol: "♂", color: "#ef4444" },
+      { key: "Jupiter", name: "木星", symbol: "♃", color: "#a855f7" },
+      { key: "Saturn", name: "土星", symbol: "♄", color: "#64748b" },
+      { key: "Node", name: "ドラゴンヘッド", symbol: "☊", color: "#10b981" },
+      { key: "SouthNode", name: "ドラゴンテイル", symbol: "☋", color: "#059669" }
+    ];
+
+    // 各天体が司る「役割・象徴」の補足テキスト
+    const PLANET_ROLES = {
+      "Sun": "の基本性格が",
+      "Moon": "の素の姿が",
+      "Mercury": "の言葉や考え方が",
+      "Venus": "の好みや恋愛観が",
+      "Mars": "の行動の仕方・怒りポイントが",
+      "Jupiter": "の楽観的なノリが",
+      "Saturn": "の現実的ブレーキが",
+      "Node": "の宿命的テーマが",
+      "SouthNode": "の過去からの縁が"
+    };
+
+    const ELEM_TRANSLATE = {
+      Fire: { name: "火 (情熱・直感)", color: "text-red-400", icon: "🔥" },
+      Earth: { name: "地 (現実・安定)", color: "text-emerald-400", icon: "🌱" },
+      Air: { name: "風 (思考・自由)", color: "text-sky-400", icon: "🌪️" },
+      Water: { name: "水 (感情・共感)", color: "text-purple-400", icon: "💧" }
+    };
+
+    // --- Astronomical Precise Calculations ---
+    function calculatePlanets(dateStr, timeStr) {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const [hour, minute] = (timeStr || '12:00').split(':').map(Number);
+      
+      // JST (UTC+9) to UTC conversion
+      const utcDate = new Date(Date.UTC(year, month - 1, day, hour - 9, minute, 0));
+      const d = (utcDate.getTime() - Date.UTC(2000, 0, 1, 12, 0, 0)) / (1000 * 60 * 60 * 24);
+
+      // Sun calculation
+      const sunMeanLong = (280.46646 + 0.98564736 * d) % 360;
+      const sunMeanAnom = (357.52911 + 0.98560028 * d) % 360;
+      const sunMeanAnomRad = sunMeanAnom * Math.PI / 180;
+      const sunGeocentricLong = (sunMeanLong + 1.914600 * Math.sin(sunMeanAnomRad) + 0.019993 * Math.sin(2 * sunMeanAnomRad) + 36000) % 360;
+      const earthHeliolong = (sunGeocentricLong + 180) % 360;
+
+      // Mean North Node
+      const meanNodeLong = (125.044522 - 0.0529537648 * d + 36000) % 360;
+
+      const getLongitude = (bodyKey) => {
+        if (bodyKey === 'Sun') return sunGeocentricLong;
+        if (bodyKey === 'Node') return meanNodeLong;
+        if (bodyKey === 'SouthNode') return (meanNodeLong + 180) % 360;
+
+        if (bodyKey === 'Moon') {
+          let L0 = (218.316 + 13.176396 * d) % 360;
+          let M = (134.963 + 13.064993 * d) % 360;
+          let F = (93.272 + 13.229350 * d) % 360;
+          let mRad = M * Math.PI / 180;
+          let fRad = F * Math.PI / 180;
+          let L = L0 + 6.289 * Math.sin(mRad) 
+                     - 1.274 * Math.sin((M - 2 * F) * Math.PI / 180) 
+                     + 0.658 * Math.sin(2 * mRad)
+                     - 0.214 * Math.sin(2 * fRad);
+          return (L + 36000) % 360;
+        }
+
+        let a, e, L, w;
+        if (bodyKey === 'Mercury') {
+          a = 0.387098; e = 0.205630;
+          L = (252.2509 + 4.092334436 * d) % 360;
+          w = 77.456 + 0.000044 * d;
+        } else if (bodyKey === 'Venus') {
+          a = 0.723332; e = 0.006773;
+          L = (181.9798 + 1.60213034 * d) % 360;
+          w = 131.564 + 0.000027 * d;
+        } else if (bodyKey === 'Mars') {
+          a = 1.523679; e = 0.093401;
+          L = (355.4330 + 0.52403304 * d) % 360;
+          w = 336.060 + 0.000050 * d;
+        } else if (bodyKey === 'Jupiter') {
+          a = 5.204267; e = 0.048498;
+          L = (34.3515 + 0.08308530 * d) % 360;
+          w = 14.753 + 0.000047 * d;
+        } else if (bodyKey === 'Saturn') {
+          a = 9.537207; e = 0.055546;
+          L = (50.0774 + 0.03344423 * d) % 360;
+          w = 92.432 + 0.000054 * d;
+        }
+
+        let M = (L - w + 36000) % 360;
+        let mRad = M * Math.PI / 180;
+        let v = M + (2 * e - Math.pow(e, 3) / 4) * Math.sin(mRad) * (180 / Math.PI) + (1.25 * e * e) * Math.sin(2 * mRad) * (180 / Math.PI);
+        let r = a * (1 - e * e) / (1 + e * Math.cos(v * Math.PI / 180));
+        let helioLong = (v + w + 36000) % 360;
+
+        let helioRad = helioLong * Math.PI / 180;
+        let earthRad = earthHeliolong * Math.PI / 180;
+        
+        let xPlanet = r * Math.cos(helioRad);
+        let yPlanet = r * Math.sin(helioRad);
+        let xEarth = 1.0 * Math.cos(earthRad);
+        let yEarth = 1.0 * Math.sin(earthRad);
+
+        let geocentricX = xPlanet - xEarth;
+        let geocentricY = yPlanet - yEarth;
+
+        return (Math.atan2(geocentricY, geocentricX) * 180 / Math.PI + 360) % 360;
+      };
+
+      const results = {};
+      PLANET_DEFS.forEach(p => {
+        let lon = getLongitude(p.key);
+        let signIndex = Math.floor(lon / 30);
+        let sign = ZODIAC[signIndex];
+        let degInSign = lon % 30;
+        results[p.key] = {
+          ...p,
+          longitude: lon,
+          sign: sign.name,
+          signSymbol: sign.symbol,
+          elem: sign.elem,
+          degInSign: degInSign
+        };
+      });
+      return results;
+    }
+
+    // Aspect Calculation Between Two Chart Sets
+    function calculateAspects(planetsA, planetsB) {
+      const ASPECT_TYPES = [
+        { name: "コンジャンクション (0°)", key: "0", angle: 0, orb: 5, type: "harmony", score: 20, desc: "運命の一体感！良くも悪くも影響大" },
+        { name: "オポジション (180°)", key: "180", angle: 180, orb: 5, type: "tension", score: -5, desc: "強力な磁力と激しい対立の背中合わせ" },
+        { name: "スクエア (90°)", key: "90", angle: 90, orb: 5, type: "tension", score: -15, desc: "摩擦・ストレスが絶えない刺激的関係" },
+        { name: "トライン (120°)", key: "120", angle: 120, orb: 5, type: "harmony", score: 15, desc: "息がぴったり合う居心地最高の調和" },
+        { name: "セクスタイル (60°)", key: "60", angle: 60, orb: 5, type: "harmony", score: 10, desc: "心地よい刺激と補い合える良好関係" }
+      ];
+
+      const foundAspects = [];
+      Object.values(planetsA).forEach(pA => {
+        Object.values(planetsB).forEach(pB => {
+          let diff = Math.abs(pA.longitude - pB.longitude);
+          if (diff > 180) diff = 360 - diff;
+
+          ASPECT_TYPES.forEach(asp => {
+            const orbValue = Math.abs(diff - asp.angle);
+            if (orbValue <= asp.orb) {
+              foundAspects.push({
+                pA: pA,
+                pB: pB,
+                aspectKey: asp.key,
+                aspectName: asp.name,
+                type: asp.type,
+                score: asp.score,
+                desc: asp.desc,
+                angleDiff: diff,
+                orbValue: orbValue
+              });
+            }
+          });
+        });
+      });
+      return foundAspects;
+    }
+
+    // Compute Elemental Breakdown
+    function getElementCounts(planets) {
+      const counts = { Fire: 0, Earth: 0, Air: 0, Water: 0 };
+      Object.values(planets).forEach(p => {
+        if (counts[p.elem] !== undefined) counts[p.elem]++;
+      });
+      return counts;
+    }
+
+    // 12星座のシュールで辛口な性格キーワード定義
+    const ZODIAC_TRAITS = {
+      "牡羊座": "猪突猛進で自己主張強め・思い立ったら即行動の暴走特急",
+      "牡牛座": "頑固一徹・マイペースで美味しいものと安定への執着が異常",
+      "双子座": "おしゃべりで調子いい・好奇心旺盛だが一瞬で飽きる薄情さ",
+      "蟹座": "仲間内には激甘だが敵には塩対応・情緒不安定な過保護",
+      "獅子座": "自分が主役じゃないと気が済まない・プライド高めの目立ちたがり",
+      "乙女座": "超細かいことにうるさい分析魔・他人にも自分にも毒舌クレーマー",
+      "天秤座": "八方美人でいいカッコしい・優柔不断で本当の顔は見せない",
+      "蠍座": "一目惚れかゼロか・執念深さと嫉妬心が底なしの重たい愛",
+      "射手座": "束縛NGの自由人・ノリは良いが後先考えない責任放棄",
+      "山羊座": "野心家のリアル主義・損得勘定に厳しく無駄が大嫌い",
+      "水瓶座": "変人であることを誇る・一見フレンドリーだが心は超ドライ",
+      "魚座": "優しすぎてつかみどころがない・妄想大好きな甘えん坊"
+    };
+
+    // Spicy Commentary Generators
+    function generatePreferences(planets, name) {
+      const sun = planets.Sun.sign;
+      const moon = planets.Moon.sign;
+      const venus = planets.Venus.sign;
+      const mars = planets.Mars.sign;
+      const jupiter = planets.Jupiter.sign;
+      const saturn = planets.Saturn.sign;
+
+      const sunTrait = ZODIAC_TRAITS[sun] || "";
+      const moonTrait = ZODIAC_TRAITS[moon] || "";
+      const venusTrait = ZODIAC_TRAITS[venus] || "";
+      const marsTrait = ZODIAC_TRAITS[mars] || "";
+      const jupiterTrait = ZODIAC_TRAITS[jupiter] || "";
+      const saturnTrait = ZODIAC_TRAITS[saturn] || "";
+
+      return `
+        <div class="space-y-2.5">
+          <p><span class="font-bold text-pink-300">【基本の性格・アイデンティティ】</span><br>
+          太陽：${sun} / 月：${moon}<br>
+          表向きは<strong>${sun}（${sunTrait}）</strong>らしく振る舞いますが、本音の欲求（月）は<strong>${moon}（${moonTrait}）</strong>。この裏の顔を理解してあげないと影で機嫌を損ねます。
+          </p>
+          <p><span class="font-bold text-pink-300">【好きなタイプ・恋愛傾向】</span><br>
+          金星：${venus}<br>
+          <strong>${venus}（${venusTrait}）</strong>的な要素を持つ人にコロッと弱く、フェチや美意識もここに丸出しになります。
+          </p>
+          <p><span class="font-bold text-pink-300">【怒りポイント・行動スタイル】</span><br>
+          火星：${mars}<br>
+          スイッチが入ると<strong>${mars}（${marsTrait}）</strong>的などぎつい攻撃性を発揮。思い通りにいかないと急に頑固になって周囲を振り回します。
+          </p>
+          <p><span class="font-bold text-pink-300">【幸運のつかみ方・責任の取り方】</span><br>
+          木星：${jupiter} / 土星：${saturn}<br>
+          <strong>木星(${jupiter})</strong>のポジティブなノリ(${jupiterTrait})で人生を広げようとしますが、土壇場では<strong>土星(${saturn})</strong>の厳しい現実感覚(${saturnTrait})がブレーキをかけます。
+          </p>
+        </div>
+      `;
+    }
+
+    // テーマタグ判定ヘルパー
+    function getAspectCategory(p1Key, p2Key) {
+      const keys = [p1Key, p2Key].sort();
+      if (keys.includes("Mercury")) return { tag: "💬【会話・テンポ相性】", color: "bg-sky-900/80 text-sky-200 border-sky-500/40" };
+      if (keys.includes("Venus") && (keys.includes("Mars") || keys.includes("Sun") || keys.includes("Moon"))) return { tag: "💖【恋愛・趣味・トキメキ】", color: "bg-pink-900/80 text-pink-200 border-pink-500/40" };
+      if (keys.includes("Saturn")) return { tag: "🛡️【現実・ブレーキ・長期的絆】", color: "bg-emerald-900/80 text-emerald-200 border-emerald-500/40" };
+      if (keys.includes("Jupiter")) return { tag: "✨【全肯定・楽観・甘やかし】", color: "bg-purple-900/80 text-purple-200 border-purple-500/40" };
+      if (keys.includes("Mars")) return { tag: "🔥【喧嘩・行動力・衝突】", color: "bg-amber-900/80 text-amber-200 border-amber-500/40" };
+      if (keys.includes("Node") || keys.includes("SouthNode")) return { tag: "🔮【宿命・前世の引き寄せ】", color: "bg-teal-900/80 text-teal-200 border-teal-500/40" };
+      return { tag: "🌟【人生観・本音の一致】", color: "bg-indigo-900/80 text-indigo-200 border-indigo-500/40" };
+    }
+
+    // 辛口アスペクト＆星座掛け合わせ詳細解説生成エンジン
+    function generateAspectComment(asp, nameA, nameB) {
+      const pA = asp.pA;
+      const pB = asp.pB;
+      const deg = asp.aspectKey;
+      const aspName = asp.aspectName;
+
+      const traitA = ZODIAC_TRAITS[pA.sign] || "";
+      const traitB = ZODIAC_TRAITS[pB.sign] || "";
+
+      const category = getAspectCategory(pA.key, pB.key);
+
+      // 太陽（Sun）が絡むアスペクトの詳細解説
+      if (pA.key === "Sun" || pB.key === "Sun") {
+        const pSun = pA.key === "Sun" ? pA : pB;
+        const pOther = pA.key === "Sun" ? pB : pA;
+        const sunOwner = pA.key === "Sun" ? nameA : nameB;
+        const otherOwner = pA.key === "Sun" ? nameB : nameA;
+        const sunSign = pSun.sign;
+        const otherSign = pOther.sign;
+        const otherName = pOther.name;
+        const sTrait = ZODIAC_TRAITS[sunSign] || "";
+        const oTrait = ZODIAC_TRAITS[otherSign] || "";
+
+        // 1. 太陽 × 月
+        if (otherName === "月") {
+          if (deg === "0") return renderCard(asp, nameA, nameB, category, `【0° 合】最高の一体感！${sunOwner}の生き方と${otherOwner}の本音が完全に一致。説明不要で安心できるソウルメイト相性。`);
+          if (deg === "120" || deg === "60") return renderCard(asp, nameA, nameB, category, `【${aspName}】理想のバックアップ！${sunOwner}の挑戦を、${otherOwner}の感情が自然に包み込んで支える癒やし関係。`);
+          if (deg === "90") return renderCard(asp, nameA, nameB, category, `【90° スクエア】すれ違いの横やり！${sunOwner}の行動目的に対し、${otherOwner}がモヤモヤ。良かれと思った言動が裏目に出やすい刺激関係。`);
+          if (deg === "180") return renderCard(asp, nameA, nameB, category, `【180° オポジション】引き合う強烈な鏡！${sunOwner}の公の顔と${otherOwner}のプライベートな本音が正面衝突。強烈な惹かれ合いと反発の背中合わせ。`);
+        }
+        // 2. 太陽 × 水星
+        if (otherName === "水星") {
+          if (deg === "0" || deg === "120" || deg === "60") return renderCard(asp, nameA, nameB, category, `【${aspName}】会話爆発トーク相性！${sunOwner}の発想に${otherOwner}の頭脳が軽快にレスポンス。LINEや長電話のテンポが完璧に一致。`);
+          return renderCard(asp, nameA, nameB, category, `【${aspName}】思考回路のズレ！${sunOwner}の意図が${otherOwner}には斜め上に伝わり、「なんでそう解釈するの！？」と会話でイラッとすれ違い。`);
+        }
+        // 3. 太陽 × 金星
+        if (otherName === "金星") {
+          if (deg === "0" || deg === "120" || deg === "60") return renderCard(asp, nameA, nameB, category, `【${aspName}】趣味・センスのベストマッチ！${sunOwner}の生き方を${otherOwner}が「それ最高！」と大絶賛。一緒に遊ぶ・買い物するだけでテンション最高潮。`);
+          return renderCard(asp, nameA, nameB, category, `【${aspName}】金銭感覚・美意識の小競り合い！お互い好きだけど、「そこにお金やこだわり使う！？」と趣味嗜好のズレでプチストレス。`);
+        }
+        // 4. 太陽 × 火星
+        if (otherName === "火星") {
+          if (deg === "0" || deg === "120" || deg === "60") return renderCard(asp, nameA, nameB, category, `【${aspName}】最強の推進力タッグ！${sunOwner}の目標に向けて${otherOwner}の行動力が火を付ける、何事もスピード解決できる熱血コンビ。`);
+          return renderCard(asp, nameA, nameB, category, `【90°/180° 衝突】マウント取り合い爆弾！${sunOwner}のプライドに${otherOwner}の攻撃性が油を注ぎ、マウントの取り合いで喧嘩が勃発。`);
+        }
+        // 5. 太陽 × 木星
+        if (otherName === "木星") {
+          if (deg === "0" || deg === "120" || deg === "60") return renderCard(asp, nameA, nameB, category, `【${aspName}】無条件の全肯定＆大吉コンビ！${otherOwner}の寛大さが${sunOwner}の自信を大きく膨らませる、一緒にいるだけで幸運が舞い込む関係。`);
+          return renderCard(asp, nameA, nameB, category, `【${aspName}】甘やかしの罠。${otherOwner}の楽観主義が${sunOwner}を調子に乗せすぎて、散財やルーズさを生む原因に。`);
+        }
+        // 6. 太陽 × 土星
+        if (otherName === "土星") {
+          if (deg === "90" || deg === "180") return renderCard(asp, nameA, nameB, category, `【厳しい現実ブレーキ】${otherOwner}の現実論やダメ出しが${sunOwner}の自由を縛る。「お説教部屋」にいるような重苦しさを感じる辛口配置。`);
+          return renderCard(asp, nameA, nameB, category, `【盤石な信頼の土台】${otherOwner}が現実的な責任とブレーキとなって支えてくれるため、簡単には途切れない強固な長期的パートナーシップ。`);
+        }
+        // 7. 太陽 × ドラゴンヘッド / テイル
+        if (otherName === "ドラゴンヘッド" || otherName === "ドラゴンテイル") {
+          if (deg === "0") return renderCard(asp, nameA, nameB, category, `【0° 宿命の引き合わせ】前世からの強力な縁！${otherOwner}が${sunOwner}の人生の方向性を決定づける運命的引力。`);
+          return renderCard(asp, nameA, nameB, category, `【${aspName}】深いソウルメイト縁！出会うべくして出会った感覚があり、お互いの人生の節目でキーパーソンになります。`);
+        }
+      }
+
+      // 金星 × 火星（恋愛・フェロモン）
+      const pairKeys = [pA.key, pB.key].sort().join("×");
+      if (pairKeys.includes("Venus") && pairKeys.includes("Mars")) {
+        if (deg === "0") return renderCard(asp, nameA, nameB, category, `【0° 本能の強烈フェロモン】性的魅力と情熱が渦巻く中毒相性！理性が吹き飛び、強烈に惹かれ合います。`);
+        if (deg === "120" || deg === "60") return renderCard(asp, nameA, nameB, category, `【${aspName}】ときめきロマンチック！お互いのアプローチが完璧にハマり、いつまでも新鮮な恋愛感情をキープ。`);
+        return renderCard(asp, nameA, nameB, category, `【${aspName} 愛憎のすれ違い】惹かれるけれどデリカシーのなさにイライラ！恋愛アプローチと受け止め方のタイミングがズレやすい刺激的関係。`);
+      }
+
+      // 汎用判定
+    let text = `【${aspName}】`;
+    if (deg === "0") text += `お互いの存在感がダイレクトに融合し、強力な影響を与え合います。`;
+    else if (deg === "120" || deg === "60") text += `スムーズな調和角度。お互いの性質を素直に認め合える居心地の良い関係です。`;
+    else text += `緊張感のある角度。お互いの性格ギャップをどこまで面白がれるかが試されます。`;
+
+    return renderCard(asp, nameA, nameB, category, text);
+  }
+
+  // Helper to render aspect cards cleanly
+  function renderCard(asp, nameA, nameB, category, text) {
+    const isTension = asp.type === "tension";
+    const borderClr = isTension ? "border-red-500/40 bg-red-950/20" : "border-blue-500/40 bg-blue-950/20";
+    const badgeClr = isTension ? "bg-red-900/60 text-red-300" : "bg-blue-900/60 text-blue-300";
+
+    const traitA = ZODIAC_TRAITS[asp.pA.sign] || "";
+    const traitB = ZODIAC_TRAITS[asp.pB.sign] || "";
+    const roleA = PLANET_ROLES[asp.pA.key] || "";
+    const roleB = PLANET_ROLES[asp.pB.key] || "";
+
+    return `
+      <div class="p-4 rounded-xl border ${borderClr} transition hover:border-purple-400/50">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded border ${category.color}">
+              ${category.tag}
+            </span>
+            <div class="font-bold text-sm text-purple-100">
+              ${nameA}の<span class="text-pink-400">${asp.pA.name}${roleA}(${asp.pA.sign})</span>
+              <span class="text-[11px] font-normal text-pink-300/80">「${traitA}」</span>
+              <span class="mx-1 text-purple-400">×</span> 
+              ${nameB}の<span class="text-indigo-400">${asp.pB.name}${roleB}(${asp.pB.sign})</span>
+              <span class="text-[11px] font-normal text-indigo-300/80">「${traitB}」</span>
+            </div>
+          </div>
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${badgeClr}">
+            ${asp.aspectName}
+          </span>
+        </div>
+        <p class="text-xs text-purple-200 leading-relaxed">${text}</p>
+      </div>
+    `;
+  }
+
+    // Helper to render aspect cards cleanly
+    function renderCard(asp, nameA, nameB, category, text) {
+      const isTension = asp.type === "tension";
+      const borderClr = isTension ? "border-red-500/40 bg-red-950/20" : "border-blue-500/40 bg-blue-950/20";
+      const badgeClr = isTension ? "bg-red-900/60 text-red-300" : "bg-blue-900/60 text-blue-300";
+
+      const traitA = ZODIAC_TRAITS[asp.pA.sign] || "";
+      const traitB = ZODIAC_TRAITS[asp.pB.sign] || "";
+      const roleA = PLANET_ROLES[asp.pA.key] || "";
+      const roleB = PLANET_ROLES[asp.pB.key] || "";
+
+      return `
+        <div class="p-4 rounded-xl border ${borderClr} transition hover:border-purple-400/50">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded border ${category.color}">
+                ${category.tag}
+              </span>
+              <div class="font-bold text-sm text-purple-100">
+                ${nameA}の<span class="text-pink-400">${asp.pA.name}${roleA}(${asp.pA.sign})</span>
+                <span class="text-[11px] font-normal text-pink-300/80">「${traitA}」</span>
+                <span class="mx-1 text-purple-400">×</span> 
+                ${nameB}の<span class="text-indigo-400">${asp.pB.name}${roleB}(${asp.pB.sign})</span>
+                <span class="text-[11px] font-normal text-indigo-300/80">「${traitB}」</span>
+              </div>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${badgeClr}">
+              ${asp.aspectName} (オーブ:${asp.orbValue.toFixed(1)}°)
+            </span>
+          </div>
+          <p class="text-xs text-purple-200 leading-relaxed">${text}</p>
+        </div>
+      `;
+    }
+
+    // Time Unknown Checkbox Listeners
+    document.getElementById('unknownTimeA').addEventListener('change', function(e) {
+      const timeInput = document.getElementById('tobA');
+      const note = document.getElementById('moonNoteA');
+      if (e.target.checked) {
+        timeInput.value = "12:00";
+        timeInput.disabled = true;
+        note.classList.remove('hidden');
+      } else {
+        timeInput.disabled = false;
+        note.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('unknownTimeB').addEventListener('change', function(e) {
+      const timeInput = document.getElementById('tobB');
+      const note = document.getElementById('moonNoteB');
+      if (e.target.checked) {
+        timeInput.value = "12:00";
+        timeInput.disabled = true;
+        note.classList.remove('hidden');
+      } else {
+        timeInput.disabled = false;
+        note.classList.add('hidden');
+      }
+    });
+
+    // Render 2-Wheel Horoscope SVG
+    function renderDualWheelSVG(planetsA, planetsB) {
+      const svg = document.getElementById('horoscopeSvg');
+      svg.innerHTML = '';
+
+      const cx = 250, cy = 250;
+      const rOuter = 230;
+      const rInnerWheel = 165;
+      const rInner = 100;
+      const rCenter = 85;
+
+      // Outer Circle / Background Ring
+      let html = `<circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="#0f0921" stroke="#6b21a8" stroke-width="2"/>`;
+      html += `<circle cx="${cx}" cy="${cy}" r="${rInnerWheel}" fill="none" stroke="#581c87" stroke-dasharray="2 2" stroke-width="1.5"/>`;
+      html += `<circle cx="${cx}" cy="${cy}" r="${rInner}" fill="#160d33" stroke="#4c1d95" stroke-width="2"/>`;
+      html += `<circle cx="${cx}" cy="${cy}" r="${rCenter}" fill="#090514" stroke="#3b0764" stroke-width="1.5"/>`;
+
+      // 12 Zodiac Lines & Symbols
+      for (let i = 0; i < 12; i++) {
+        let angleDeg = i * 30;
+        let rad = (angleDeg - 90) * Math.PI / 180;
+        let x1 = cx + rCenter * Math.cos(rad);
+        let y1 = cy + rCenter * Math.sin(rad);
+        let x2 = cx + rOuter * Math.cos(rad);
+        let y2 = cy + rOuter * Math.sin(rad);
+        html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3b0764" stroke-width="1"/>`;
+
+        // Zodiac Label Position
+        let midRad = (angleDeg + 15 - 90) * Math.PI / 180;
+        let xSign = cx + (rOuter - 18) * Math.cos(midRad);
+        let ySign = cy + (rOuter - 18) * Math.sin(midRad);
+        html += `<text x="${xSign}" y="${ySign}" font-size="12" fill="#a855f7" text-anchor="middle" dominant-baseline="central">${ZODIAC[i].symbol}</text>`;
+      }
+
+      // Helper to calculate planet position (0 deg Aries is Top/Left standard)
+      const getCoords = (long, radius) => {
+        let rad = (long - 90) * Math.PI / 180;
+        return {
+          x: cx + radius * Math.cos(rad),
+          y: cy + radius * Math.sin(rad)
+        };
+      };
+
+      // Draw Outer Planets (B) - Pink / Indigo
+      Object.values(planetsB).forEach(p => {
+        let pos = getCoords(p.longitude, 195);
+        html += `
+          <circle cx="${pos.x}" cy="${pos.y}" r="11" fill="#312e81" stroke="#818cf8" stroke-width="1.5"/>
+          <text x="${pos.x}" y="${pos.y}" font-size="10" fill="#c7d2fe" font-weight="bold" text-anchor="middle" dominant-baseline="central">${p.symbol}</text>
+        `;
+      });
+
+      // Draw Inner Planets (A) - Pink
+      Object.values(planetsA).forEach(p => {
+        let pos = getCoords(p.longitude, 132);
+        html += `
+          <circle cx="${pos.x}" cy="${pos.y}" r="11" fill="#831843" stroke="#f472b6" stroke-width="1.5"/>
+          <text x="${pos.x}" y="${pos.y}" font-size="10" fill="#fbcfe8" font-weight="bold" text-anchor="middle" dominant-baseline="central">${p.symbol}</text>
+        `;
+      });
+
+      // Draw Aspects in Center Circle
+      const aspects = calculateAspects(planetsA, planetsB);
+      aspects.forEach(asp => {
+        let posA = getCoords(asp.pA.longitude, rCenter - 2);
+        let posB = getCoords(asp.pB.longitude, rCenter - 2);
+        let color = asp.type === "harmony" ? "#38bdf8" : "#ef4444";
+        let dash = asp.type === "tension" ? 'stroke-dasharray="3 3"' : '';
+        html += `<line x1="${posA.x}" y1="${posA.y}" x2="${posB.x}" y2="${posB.y}" stroke="${color}" stroke-width="1.5" opacity="0.7" ${dash}/>`;
+      });
+
+      svg.innerHTML = html;
+    }
+
+    // --- Main Form Handler ---
+    document.getElementById('synastryForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nameA = document.getElementById('nameA').value.trim() || 'あなた';
+      const dobA = document.getElementById('dobA').value;
+      const tobA = document.getElementById('tobA').value;
+
+      const nameB = document.getElementById('nameB').value.trim() || 'お相手';
+      const dobB = document.getElementById('dobB').value;
+      const tobB = document.getElementById('tobB').value;
+
+      // 1. Calculations
+      const planetsA = calculatePlanets(dobA, tobA);
+      const planetsB = calculatePlanets(dobB, tobB);
+      const aspects = calculateAspects(planetsA, planetsB);
+
+      // 2. Score Engine Calculation
+      let totalScore = 50; // base score
+      aspects.forEach(a => totalScore += a.score);
+
+      // Element score bonus/penalty
+      const elemA = getElementCounts(planetsA);
+      const elemB = getElementCounts(planetsB);
+
+      // Element Synergy Matrix
+      let elemBonus = 0;
+      ["Fire", "Earth", "Air", "Water"].forEach(el => {
+        let diff = Math.abs(elemA[el] - elemB[el]);
+        if (diff === 0) elemBonus += 4;
+        else if (diff <= 1) elemBonus += 2;
+      });
+      totalScore += elemBonus;
+      totalScore = Math.min(99, Math.max(12, totalScore)); // Clamp between 12 and 99
+
+      // 3. Render Header / Names / Score
+      document.getElementById('resNameA').textContent = nameA;
+      document.getElementById('resNameB').textContent = nameB;
+      document.getElementById('legendA').textContent = nameA;
+      document.getElementById('legendB').textContent = nameB;
+      document.getElementById('legendA2').textContent = nameA;
+      document.getElementById('legendB2').textContent = nameB;
+      document.getElementById('elemLegendA').textContent = nameA;
+      document.getElementById('elemLegendB').textContent = nameB;
+      document.getElementById('pNameA').textContent = `${nameA} の7天体`;
+      document.getElementById('pNameB').textContent = `${nameB} の7天体`;
+      document.getElementById('prefTitleA').textContent = nameA;
+      document.getElementById('prefTitleB').textContent = nameB;
+
+      // Animate Score Counter
+      const scoreEl = document.getElementById('synastryScore');
+      let current = 0;
+      const timer = setInterval(() => {
+        current += 2;
+        if (current >= totalScore) {
+          current = totalScore;
+          clearInterval(timer);
+        }
+        scoreEl.textContent = current;
+      }, 25);
+
+      // Spicy Summary Text
+      let summaryText = "";
+      if (totalScore >= 85) {
+        summaryText = `【辛口評価：前世からの惹かれ合いと危険な居心地の良さ】<br>完璧すぎるシンクロ度！${nameA}と${nameB}の空気感は驚くほどぴったりですが、甘えが出すぎると共倒れになるリスクも。お互いの「一人の時間」を守ることが長続きの鍵です。`;
+      } else if (totalScore >= 70) {
+        summaryText = `【辛口評価：噛み合えば最強の相思相愛タッグ】<br>お互いの長所と短所がうまく作用する好相性。ただし価値観の違い（90°/180°）が露骨に出る場面があるので、お説教モードにならずに相手の言い分を聞く工夫が必要です。`;
+      } else if (totalScore >= 50) {
+        summaryText = `【辛口評価：刺激多めのジェットコースター関係】<br>惹かれ合うスピードは速いものの、素の性格が出ると激しい衝突（愛憎劇）を起こしやすい相性。歩み寄りの努力を怠ると、一瞬で冷め冷めモードに突入します。`;
+      } else {
+        summaryText = `【辛口評価：異次元すぎて理解不能の難解カップル】<br>思考回路も怒りポイントも正反対！だからこそ強烈な刺激にはなりますが、無理に理解しようとするとストレス爆発。適度なソーシャルディスタンスを保つのが吉。`;
+      }
+      document.getElementById('spicySummary').innerHTML = summaryText;
+
+      // 4. Render Dual Wheel SVG
+      renderDualWheelSVG(planetsA, planetsB);
+
+      // 5. Render Element Comparison Bars (With Clear Visual Contrast)
+      const elemContainer = document.getElementById('elementalComparison');
+      elemContainer.innerHTML = '';
+      
+      const totalA = Object.values(elemA).reduce((a, b) => a + b, 0);
+      const totalB = Object.values(elemB).reduce((a, b) => a + b, 0);
+
+      ["Fire", "Earth", "Air", "Water"].forEach(el => {
+        let pctA = Math.round((elemA[el] / totalA) * 100);
+        let pctB = Math.round((elemB[el] / totalB) * 100);
+
+        let itemHtml = `
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="${ELEM_TRANSLATE[el].color}">${ELEM_TRANSLATE[el].icon} ${ELEM_TRANSLATE[el].name}</span>
+              <span class="text-purple-300">${nameA}: ${elemA[el]} / ${nameB}: ${elemB[el]}</span>
+            </div>
+            <div class="w-full bg-purple-950/80 rounded-full h-3 flex overflow-hidden border border-purple-800/40">
+              <div class="bg-gradient-to-r from-pink-500 to-rose-400 h-full transition-all duration-500" style="width: ${pctA}%" title="${nameA}: ${pctA}%"></div>
+              <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-full transition-all duration-500 ml-0.5" style="width: ${pctB}%" title="${nameB}: ${pctB}%"></div>
+            </div>
+          </div>
+        `;
+        elemContainer.innerHTML += itemHtml;
+      });
+
+      // Element Spicy Comment
+      let elemComment = "";
+      if (elemA.Fire > 2 && elemB.Water > 2) {
+        elemComment = `🔥【火と水の感情摩擦】${nameA}の情熱的で直感的な暴走に対して、${nameB}は情緒的で繊細。気持ちの温度差で噛み合わない場面が出やすい組み合わせです。`;
+      } else if (elemA.Air > 2 && elemB.Air > 2) {
+        elemComment = `🌪️【風×風のドライ＆クール】軽快なトークと自由を愛する二人！ドロドロした重い話は回避しがちで、居心地は良いものの本音の深め合いには時間がかかります。`;
+      } else if (elemA.Earth > 2 && elemB.Earth > 2) {
+        elemComment = `🌱【地×地の超リアル現実重視】お互い損得勘定と安定への執着が強く、石橋を叩きすぎて展開が遅くなりがちですが、現実的パートナーシップとしては非常に強固です。`;
+      } else {
+        elemComment = `⚡【複雑な属性のミックス】お互いの得意分野と苦手なノリが異なります。相手の行動にイラッとしたら「属性の違い」だと諦めるのが円満のコツ。`;
+      }
+      document.getElementById('elementSpicyComment').innerHTML = elemComment;
+
+      // 6. Render Planet Lists for Both
+    const renderPlanetList = (planets) => {
+      return Object.values(planets).map(p => `
+        <div class="flex items-center justify-between py-0.5">
+          <span class="text-purple-200"><span style="color:${p.color}">${p.symbol}</span> ${p.name}</span>
+          <span class="font-bold text-purple-100">${p.sign}</span>
+        </div>
+      `).join('');
+    };
+    document.getElementById('pListA').innerHTML = renderPlanetList(planetsA);
+    document.getElementById('pListB').innerHTML = renderPlanetList(planetsB);
+
+    // 7. Render Individual Preferences
+      document.getElementById('prefContentA').innerHTML = generatePreferences(planetsA, nameA);
+      document.getElementById('prefContentB').innerHTML = generatePreferences(planetsB, nameB);
+
+      // 8. Render Spicy Aspects List
+      const aspectsContainer = document.getElementById('aspectsList');
+      aspectsContainer.innerHTML = '';
+      if (aspects.length === 0) {
+        aspectsContainer.innerHTML = '<p class="text-xs text-purple-300 italic">※メジャーアスペクト（0°, 90°, 180°, 120°, 60°）の形成はありませんでした。干渉が少なくお互いマイペースに過ごせる関係です。</p>';
+      } else {
+        aspects.forEach(asp => {
+          aspectsContainer.innerHTML += generateAspectComment(asp, nameA, nameB);
+        });
+      }
+
+      // Show Results Section Smoothly
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.classList.remove('hidden');
+      resultsDiv.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
