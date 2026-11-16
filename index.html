@@ -397,11 +397,11 @@
     // Aspect Calculation Between Two Chart Sets
     function calculateAspects(planetsA, planetsB) {
       const ASPECT_TYPES = [
-        { name: "コンジャンクション (0°)", key: "0", angle: 0, orb: 5, type: "harmony", score: 20, desc: "運命の一体感！良くも悪くも影響大" },
-        { name: "オポジション (180°)", key: "180", angle: 180, orb: 5, type: "tension", score: -5, desc: "強力な磁力と激しい対立の背中合わせ" },
-        { name: "スクエア (90°)", key: "90", angle: 90, orb: 5, type: "tension", score: -15, desc: "摩擦・ストレスが絶えない刺激的関係" },
-        { name: "トライン (120°)", key: "120", angle: 120, orb: 5, type: "harmony", score: 15, desc: "息がぴったり合う居心地最高の調和" },
-        { name: "セクスタイル (60°)", key: "60", angle: 60, orb: 5, type: "harmony", score: 10, desc: "心地よい刺激と補い合える良好関係" }
+        { name: "コンジャンクション (0°)", key: "0", angle: 0, orb: 3, type: "harmony", score: 20, desc: "運命の一体感！良くも悪くも影響大" },
+        { name: "オポジション (180°)", key: "180", angle: 180, orb: 3, type: "tension", score: -5, desc: "強力な磁力と激しい対立の背中合わせ" },
+        { name: "スクエア (90°)", key: "90", angle: 90, orb: 3, type: "tension", score: -15, desc: "摩擦・ストレスが絶えない刺激的関係" },
+        { name: "トライン (120°)", key: "120", angle: 120, orb: 3, type: "harmony", score: 15, desc: "息がぴったり合う居心地最高の調和" },
+        { name: "セクスタイル (60°)", key: "60", angle: 60, orb: 3, type: "harmony", score: 10, desc: "心地よい刺激と補い合える良好関係" }
       ];
 
       const foundAspects = [];
@@ -568,15 +568,86 @@
           return renderCard(asp, nameA, nameB, category, `【${aspName}】深いソウルメイト縁！出会うべくして出会った感覚があり、お互いの人生の節目でキーパーソンになります。`);
         }
       }
+// 🌙 月（Moon）が絡むアスペクトの詳細解説（プライベート・安心感）
+      if (pA.key === "Moon" || pB.key === "Moon") {
+        const pMoon = pA.key === "Moon" ? pA : pB;
+        const pOther = pA.key === "Moon" ? pB : pA;
+        const moonOwner = pA.key === "Moon" ? nameA : nameB;
+        const otherOwner = pA.key === "Moon" ? nameB : nameA;
 
-      // 金星 × 火星（恋愛・フェロモン）
-      const pairKeys = [pA.key, pB.key].sort().join("×");
-      if (pairKeys.includes("Venus") && pairKeys.includes("Mars")) {
-        if (deg === "0") return renderCard(asp, nameA, nameB, category, `【0° 本能の強烈フェロモン】性的魅力と情熱が渦巻く中毒相性！理性が吹き飛び、強烈に惹かれ合います。`);
-        if (deg === "120" || deg === "60") return renderCard(asp, nameA, nameB, category, `【${aspName}】ときめきロマンチック！お互いのアプローチが完璧にハマり、いつまでも新鮮な恋愛感情をキープ。`);
-        return renderCard(asp, nameA, nameB, category, `【${aspName} 愛憎のすれ違い】惹かれるけれどデリカシーのなさにイライラ！恋愛アプローチと受け止め方のタイミングがズレやすい刺激的関係。`);
+        if (deg === "0" || deg === "120" || deg === "60") {
+          return renderCard(asp, nameA, nameB, category, `【${aspName} 圧倒的な安心感と癒やし】${moonOwner}の素の感情やプライベートな顔に、${otherOwner}が自然と心地よさを寄り添わせられる関係。一緒にいるだけでリラックスできるお家のような絆。`);
+        }
+        return renderCard(asp, nameA, nameB, category, `【${aspName} 生活リズムと気分のすれ違い】${moonOwner}の「こうしてほしい・ホッとしたい」というツボと、${otherOwner}の気分の波が噛み合わず、「なんか気を遣う…」とプライベートで地味なストレスが溜まる摩擦。`);
       }
 
+// 💬 水星（Mercury）が絡むアスペクトの詳細解説（思考・会話のテンポ・言葉のキャッチボール）
+      if (pA.key === "Mercury" || pB.key === "Mercury") {
+        const pMerc = pA.key === "Mercury" ? pA : pB;
+        const pOther = pA.key === "Mercury" ? pB : pA;
+        const mercOwner = pA.key === "Mercury" ? nameA : nameB;
+        const otherOwner = pA.key === "Mercury" ? nameB : nameA;
+
+        // 調和（0度、120度、60度）なら、スムーズで楽しい会話・知的な刺激
+        if (deg === "0" || deg === "120" || deg === "60") {
+          return renderCard(asp, nameA, nameB, category, `【${aspName} 思考と会話のナイスコンビネーション】${mercOwner}の言葉やアイデアに、${otherOwner}がすっと心地よく波長を合わせられる関係。連絡のレスやツッコミのテンポが合いやすい！`);
+        }
+        // 緊張（90度、180度など）なら、言葉のすれ違いやツッコミどころ
+        return renderCard(asp, nameA, nameB, category, `【${aspName} 言葉のすれ違い・論破バトル】${mercOwner}の発言の意図が、${otherOwner}にはなぜか斜め上に伝わってプチ論争になりがち。「そう言ってるわけじゃないのに！」とお互い口がスベる刺激的関係。`);
+      }
+
+// 💖 金星（Venus）が絡むアスペクトの詳細解説（恋愛・トキメキ・趣味）
+      if (pA.key === "Venus" || pB.key === "Venus") {
+        const pVen = pA.key === "Venus" ? pA : pB;
+        const pOther = pA.key === "Venus" ? pB : pA;
+        const venOwner = pA.key === "Venus" ? nameA : nameB;
+        const otherOwner = pA.key === "Venus" ? nameB : nameA;
+
+        if (deg === "0" || deg === "120" || deg === "60") {
+          return renderCard(asp, nameA, nameB, category, `【${aspName} ときめき＆趣味のベストマッチ】「それ最高！」と互いのセンスや可愛いところを大絶賛し合える関係。デートの行き先や好きなものが自然と一致して、いつまでもラブラブ気分を維持！`);
+        }
+        return renderCard(asp, nameA, nameB, category, `【${aspName} 金銭感覚・美的センスのズレ】「そこにお金やこだわる！？」とお互いの趣味やプライベートの使い道にちょっとした違和感を抱きやすい、笑えるプチすれ違い。`);
+      }
+
+// 🔥 火星（Mars）が絡むアスペクトの詳細解説（情熱・行動力・喧嘩）
+      if (pA.key === "Mars" || pB.key === "Mars") {
+        const pMars = pA.key === "Mars" ? pA : pB;
+        const pOther = pA.key === "Mars" ? pB : pA;
+        const marsOwner = pA.key === "Mars" ? nameA : nameB;
+        const otherOwner = pA.key === "Mars" ? nameB : nameA;
+
+        if (deg === "0" || deg === "120" || deg === "60") {
+          return renderCard(asp, nameA, nameB, category, `【${aspName} 最強の行動タッグ＆情熱の火花】${marsOwner}のやる気やアプローチに${otherOwner}が熱く呼応する、何事もスピード感を持って突破できるエネルギッシュな相性。`);
+        }
+        return renderCard(asp, nameA, nameB, category, `【${aspName} マウントの取り合い・喧嘩の火種】お互いの負けず嫌いな一面やイライラがぶつかり合い、ちょっとした言い合いから一触即発のバトルに発展しやすいスリリングな関係。`);
+      }
+
+// ✨ 木星（Jupiter）が絡むアスペクトの詳細解説（全肯定・楽観・甘やかし）
+      if (pA.key === "Jupiter" || pB.key === "Jupiter") {
+        const pJup = pA.key === "Jupiter" ? pA : pB;
+        const pOther = pA.key === "Jupiter" ? pB : pA;
+        const jupOwner = pA.key === "Jupiter" ? nameA : nameB;
+        const otherOwner = pA.key === "Jupiter" ? nameB : nameA;
+
+        if (deg === "0" || deg === "120" || deg === "60") {
+          return renderCard(asp, nameA, nameB, category, `【${aspName} 無条件の全肯定＆大吉コンビ】${jupOwner}の寛大さと楽観性が${otherOwner}の背中を大きく大きく押し出す関係！一緒にいるとなぜか自信が湧いてきて、人生の視野がパーッと広がる幸運な絆。`);
+        }
+        return renderCard(asp, nameA, nameB, category, `【${aspName} 甘やかしの罠・ルーズさの増長】${jupOwner}の楽観的なノリに${otherOwner}が乗っかることで、お互いに歯止めが効かなくなり、散財や計画性のなさが一気に爆発する原因に。`);
+      }
+
+// 🛡️ 土星（Saturn）が絡むアスペクトの詳細解説（現実・ブレーキ・長期的絆）
+      if (pA.key === "Saturn" || pB.key === "Saturn") {
+        const pSat = pA.key === "Saturn" ? pA : pB;
+        const pOther = pA.key === "Saturn" ? pB : pA;
+        const satOwner = pA.key === "Saturn" ? nameA : nameB;
+        const otherOwner = pA.key === "Saturn" ? nameB : nameA;
+
+        if (deg === "90" || deg === "180") {
+          return renderCard(asp, nameA, nameB, category, `【${aspName} 容赦ない現実ブレーキ・お説教部屋】${satOwner}の厳しい現実論やダメ出しが、${otherOwner}の自由をガチガチに縛り上げる。「もっと気楽にいかせてよ！」と心理的プレッシャーで息が詰まる辛口配置。`);
+        }
+        return renderCard(asp, nameA, nameB, category, `【${aspName} 崩れない信頼の長期的土台】${satOwner}が現実的な責任と頼もしいブレーキ役になって支えてくれるため、多少のことでは揺るがない、人生を共にするような強固なパートナーシップ。`);
+      }
+     
       // 汎用判定
     let text = `【${aspName}】`;
     if (deg === "0") text += `お互いの存在感がダイレクトに融合し、強力な影響を与え合います。`;
